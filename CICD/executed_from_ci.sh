@@ -148,7 +148,7 @@ mkfifo ~/url_fifo
         tail -n 1 "${this_file_dir}/urls.txt" > ~/this_url.txt
         if ! diff ~/this_url.txt "${this_file_dir}/url.txt"
         then
-            cat ~/this_url.txt | tee ~/url_fifo
+            echo | tee ~/url_fifo
         fi
     done
 
@@ -159,8 +159,9 @@ mkfifo ~/url_fifo
 
     while sleep 1
     do
-        cat ~/url_fifo | tee "${this_file_dir}/url.txt"
+        cat ~/url_fifo
         diff ~/this_url.txt "${this_file_dir}/url.txt"
+        tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
         git status
         git diff HEAD
         git add "${this_file_dir}/ssh/cicd_known_hosts"
