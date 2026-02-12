@@ -160,7 +160,9 @@ mkfifo ~/url_fifo
     while sleep 1
     do
         cat ~/url_fifo | tee "${this_file_dir}/url.txt"
-        ! diff ~/this_url.txt "${this_file_dir}/url.txt"
+        diff ~/this_url.txt "${this_file_dir}/url.txt"
+        git status
+        git diff HEAD
         git add "${this_file_dir}/ssh/cicd_known_hosts"
         git add "${this_file_dir}/url.txt"
         git commit -mm
