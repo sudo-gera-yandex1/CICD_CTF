@@ -22,10 +22,10 @@ this_file_dir="$(dirname "${this_file_path}")"
     find ~/.ssh -type f -exec chmod 600 {} \;
 
     # add self to known hosts
-    ssh 127.0.0.1 -oScrictHostKeyChecking=no
+    ssh 127.0.0.1 -oStrictHostKeyChecking=no
 
     # add self to known hosts of repo
-    ssh 127.0.0.1 -oHostKeyAlias=cicd -oScrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts"
+    ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts"
 )
 
 git checkout -B ssh
