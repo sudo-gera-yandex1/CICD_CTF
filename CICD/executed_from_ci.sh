@@ -119,3 +119,6 @@ python3 -m pip install aiohttp
     done
 )&)
 
+sleep $(
+    ( echo -n 'scale = 2; 3600 * 6 - 8 - ' ; cut -d' ' -f1 /proc/uptime ) | bc
+)
