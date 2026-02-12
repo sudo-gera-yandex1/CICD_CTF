@@ -147,7 +147,6 @@ mkfifo ~/url_fifo
 # update url and known_hosts into main branch
 (set +e;(set -e
 
-    set +x
     while sleep 1
     do
         cat ~/url_fifo > "${this_file_dir}/url.txt"
