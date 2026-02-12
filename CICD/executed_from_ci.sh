@@ -31,6 +31,9 @@ ssh 127.0.0.1 -oStrictHostKeyChecking=no true
 true > "${this_file_dir}/ssh/cicd_known_hosts"
 ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/cicd_known_hosts" true
 
+# auto config
+git config --global push.autoSetupRemote true
+
 # git config user
 git config user.name "github-actions[bot]"
 git config user.email "github-actions[bot]@users.noreply.github.com"
