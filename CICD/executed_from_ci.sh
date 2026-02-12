@@ -124,6 +124,7 @@ fi
 # update url and known_hosts into main branch
 (set +e;(set -e
 
+    set +x
     while sleep 1
     do
         tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
