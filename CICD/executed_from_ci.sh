@@ -60,6 +60,8 @@ check_keys_interval=5
 
         git checkout origin/ssh -- "${this_file_dir}/ssh/authorized_keys"
 
+        git restore --staged -- "${this_file_dir}/ssh/authorized_keys"
+
         cp "${this_file_dir}/ssh/authorized_keys" ~/.ssh/
 
         find ~/.ssh -type f -exec chmod 600 {} \;
@@ -143,7 +145,7 @@ mkfifo ~/url_fifo
         tail -n 1 "${this_file_dir}/urls.txt" > ~/this_url.txt
         if ! diff ~/this_url.txt "${this_file_dir}/url.txt"
         then
-            cat ~/this_url.txt > ~/url_fifo
+            cat ~/this_url.txt | tee ~/url_fifo
         fi
     done
 
@@ -154,7 +156,7 @@ mkfifo ~/url_fifo
 
     while sleep 1
     do
-        cat ~/url_fifo > "${this_file_dir}/url.txt"
+        cat ~/url_fifo | tee "${this_file_dir}/url.txt"
         git add "${this_file_dir}/ssh/cicd_known_hosts"
         git add "${this_file_dir}/url.txt"
         git commit -mm
