@@ -25,12 +25,6 @@ then
 fi
 find ~/.ssh -type f -exec chmod 600 {} \;
 
-# add self to known hosts
-ssh 127.0.0.1 -oStrictHostKeyChecking=no true
-# add self to known hosts of next runner
-true > "${this_file_dir}/ssh/cicd_known_hosts"
-ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/cicd_known_hosts" true
-
 # auto config
 git config --global push.autoSetupRemote true
 
@@ -136,6 +130,12 @@ fi
     ) | tee "${this_file_dir}/urls.txt"
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+# add self to known hosts
+ssh 127.0.0.1 -oStrictHostKeyChecking=no true
+# add self to known hosts of next runner
+true > "${this_file_dir}/ssh/cicd_known_hosts"
+ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/cicd_known_hosts" true
 
 mkfifo ~/url_fifo
 
