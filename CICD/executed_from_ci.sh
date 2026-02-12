@@ -22,11 +22,13 @@ this_file_dir="$(dirname "${this_file_path}")"
     find ~/.ssh -type f -exec chmod 600 {} \;
 
     # add self to known hosts
-    ssh 127.0.0.1 -oStrictHostKeyChecking=no
+    ssh 127.0.0.1 -oStrictHostKeyChecking=no true
 
     # add self to known hosts of repo
-    ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts"
+    ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts" true
 )
+
+git config --global push.autoSetupRemote true
 
 git checkout -B ssh
 cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
