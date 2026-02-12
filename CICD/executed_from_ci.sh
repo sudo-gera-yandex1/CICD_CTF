@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+uname -a
+
+this_file_path="$(realpath "${0}")"
+this_file_dir="$(dirname "${this_file_path}")"
+
+(
+    cd "${this_file_dir}/ssh/"
+
+    mkdir ~/.ssh
+
+    #  {} expands into ./path/to/file.txt
+    find . -type f -exec cp {} ~/.ssh/{} \;
+
+    ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
+
+    cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+
+    find ~/.ssh -type f -exec chmod 600 {} \;
+
+    # add self to known hosts
+    ssh 127.0.0.1 -oScrictHostKeyChecking=no
+
+    # add self to known hosts of repo
+    ssh 127.0.0.1 -oHostKeyAlias=cicd -oScrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts"
+)
+
+git checkout -B ssh
+cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
+git add "${this_file_dir}/ssh/authorized_keys"
+git commit -mm
+git push
+git checkout -
+
+check_keys_interval=5
+
+((
+    while sleep $check_keys_interval
+    do
+        git fetch --all || continue
+
+        git checkout origin/ssh -- "${this_file_dir}/ssh/authorized_keys"
+
+        cp "${this_file_dir}/ssh/authorized_keys" ~/.ssh/
+
+        find ~/.ssh -type f -exec chmod 600 {} \;
+    done
+)&)    
+    
+((
+    if ! [ -f "${this_file_dir}/url.txt" ]
+    then
+        exit
+    fi
+
+    ((
+        set +e
+        while sleep 1
+        do
+            python3 ./tcp_over_http_client.py --http-url "$( cat "${this_file_dir}/url.txt" )" --tcp-host 127.0.0.1 --tcp-port 2984
+        done
+    )&)
+
+    while sleep $check_keys_interval
+    do
+        if scp -oHostKeyAlias=cicd -oPort 2984 127.0.0.1:./flag.txt .
+        then
+            break
+        else
+            continue
+        fi
+    done
+
+    sha256sum ./flag.txt
+)&)    
+    
+((
+    set +e
+    while sleep 1
+    do
+        python3 ./tcp_over_http_server.py --http-host 127.0.0.1 --http-port 2859 --tcp-host 127.0.0.1 --tcp-port 22
+    done
+)&)
+
+((
+    (
+    
+        for q in $(seq 1 3)
+        do
+            sleep 10
+    
+            ((
+                set +e
+                while sleep 1
+                do
+                    ssh -R 80:localhost:2859 nokey@localhost.run -- --output json | jq --unbuffered -r 'if has("address") and .address != null then "https://" + .address else empty end'
+                done
+            )&)
+        done
+            
+    ) > "${this_file_dir}/urls.txt"
+)&)
+    
+((
+    set +e
+    while sleep 3500
+    do
+        tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
+        git add "${this_file_dir}/url.txt"
+        git commit -mm || continue
+        git push --force --set-upstream origin main
+    done
+)&)
+
