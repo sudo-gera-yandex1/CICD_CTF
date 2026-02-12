@@ -19,7 +19,10 @@ mkdir -p ~/.ssh
 )
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
-cat "${this_file_dir}/ssh/cicd_known_hosts" >> ~/.ssh/known_hosts
+if [ -f "${this_file_dir}/ssh/cicd_known_hosts" ]
+then
+    cat "${this_file_dir}/ssh/cicd_known_hosts" >> ~/.ssh/known_hosts
+fi
 find ~/.ssh -type f -exec chmod 600 {} \;
 
 # add self to known hosts
