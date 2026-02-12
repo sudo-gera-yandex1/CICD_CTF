@@ -83,6 +83,8 @@ then
 
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
+    sleep 1.5
+
     (set +e;(set -e
 
         # try to get flag of prev runner until success
@@ -100,7 +102,7 @@ then
         # kill prev runner marking its execution as successful
         ssh -vvv -oHostKeyAlias=cicd -oPort=2984 127.0.0.1 'set -xeuo pipefail ; touch ~/ok ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
 
-        sleep 1
+        tail -f /dev/null
 
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
