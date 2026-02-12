@@ -98,7 +98,7 @@ then
         sha256sum ~/flag.txt
 
         # kill prev runner marking its execution as successful
-        ssh -oHostKeyAlias=cicd -oPort 2984 127.0.0.1 'touch ~/ok && curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
+        ssh -oHostKeyAlias=cicd -oPort=2984 127.0.0.1 'touch ~/ok && curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
 
         sleep 1
 
