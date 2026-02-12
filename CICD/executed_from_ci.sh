@@ -63,7 +63,7 @@ check_keys_interval=5
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 # if have url of prev runner
-if [ -f "${this_file_dir}/url.txt" ]
+if [ -f "${this_file_dir}/url.txt" ] && curl "$( cat "${this_file_dir}/url.txt" )"
 then
 
     cp "${this_file_dir}/url.txt" ~/url.txt
