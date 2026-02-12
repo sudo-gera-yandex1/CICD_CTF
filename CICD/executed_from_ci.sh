@@ -132,6 +132,7 @@ fi
     while sleep 1
     do
         tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
+        git add "${this_file_dir}/ssh/known_hosts"
         git add "${this_file_dir}/url.txt"
         git commit -mm || continue
         git push --force --set-upstream origin main
