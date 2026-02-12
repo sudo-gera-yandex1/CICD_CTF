@@ -19,12 +19,14 @@ mkdir -p ~/.ssh
 )
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+cat "${this_file_dir}/ssh/cicd_known_hosts" >> ~/.ssh/known_hosts
 find ~/.ssh -type f -exec chmod 600 {} \;
 
 # add self to known hosts
 ssh 127.0.0.1 -oStrictHostKeyChecking=no true
 # add self to known hosts of next runner
-ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/known_hosts" true
+true > "${this_file_dir}/ssh/cicd_known_hosts"
+ssh 127.0.0.1 -oHostKeyAlias=cicd -oStrictHostKeyChecking=no -oUserKnownHostsFile="${this_file_dir}/ssh/cicd_known_hosts" true
 
 # git config user
 git config user.name "github-actions[bot]"
@@ -144,13 +146,13 @@ mkfifo ~/url_fifo
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
-# update url and known_hosts into main branch
+# update url and cicd_known_hosts into main branch
 (set +e;(set -e
 
     while sleep 1
     do
         cat ~/url_fifo > "${this_file_dir}/url.txt"
-        git add "${this_file_dir}/ssh/known_hosts"
+        git add "${this_file_dir}/ssh/cicd_known_hosts"
         git add "${this_file_dir}/url.txt"
         git commit -mm
         git push --force
