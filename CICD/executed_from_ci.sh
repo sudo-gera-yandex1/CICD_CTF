@@ -66,7 +66,7 @@ check_keys_interval=5
 if [ -f "${this_file_dir}/url.txt" ] && (curl --no-progress-meter --max-time 8 -v "$( cat "${this_file_dir}/url.txt" )" | grep -v 'no tunnel')
 then
 
-    cp "${this_file_dir}/url.txt" ~/url.txt
+    cp "${this_file_dir}/url.txt" ~/prev_url.txt
 
     # allow connecting to the url of the prev runner
     (set +e;(set -e
@@ -74,7 +74,7 @@ then
         set +e
         while sleep 1
         do
-            python3 ./tcp_over_http_client.py --http-url "$( cat ~/url.txt )" --tcp-host 127.0.0.1 --tcp-port 2984
+            python3 ./tcp_over_http_client.py --http-url "$( cat ~/prev_url.txt )" --tcp-host 127.0.0.1 --tcp-port 2984
         done
 
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
@@ -135,10 +135,10 @@ mkfifo ~/url_fifo
     set +x
     while sleep 1
     do
-        tail -n 1 "${this_file_dir}/urls.txt" > ~/url.txt
-        if ! diff ~/url.txt "${this_file_dir}/url.txt"
+        tail -n 1 "${this_file_dir}/urls.txt" > ~/this_url.txt
+        if ! diff ~/this_url.txt "${this_file_dir}/url.txt"
         then
-            cat ~/url.txt > ~/url_fifo
+            cat ~/this_url.txt > ~/url_fifo
         fi
     done
 
