@@ -117,7 +117,7 @@ python3 -m pip install aiohttp
             )&)
         done
             
-    ) > "${this_file_dir}/urls.txt"
+    ) | tee "${this_file_dir}/urls.txt"
 
 );curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
@@ -143,6 +143,6 @@ python3 -m pip install aiohttp
 
 );curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
-printf 'HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n' | nc -N -l 1
+printf 'HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n' | sudo nc -N -l 1
 
 test -f ok
