@@ -44,7 +44,8 @@ check_keys_interval=5
 
 python3 -m pip install aiohttp
 
-((
+(set +e;(set -e
+
     while sleep $check_keys_interval
     do
         git fetch --all || continue
@@ -55,21 +56,25 @@ python3 -m pip install aiohttp
 
         find ~/.ssh -type f -exec chmod 600 {} \;
     done
-)&)    
-    
-((
+
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+(set +e;(set -e
+
     if ! [ -f "${this_file_dir}/url.txt" ]
     then
         exit
     fi
 
-    ((
+    (set +e;(set -e
+
         set +e
         while sleep 1
         do
             python3 ./tcp_over_http_client.py --http-url "$( cat "${this_file_dir}/url.txt" )" --tcp-host 127.0.0.1 --tcp-port 2984
         done
-    )&)
+
+    );curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
     while sleep $check_keys_interval
     do
@@ -82,17 +87,21 @@ python3 -m pip install aiohttp
     done
 
     sha256sum ./flag.txt
-)&)    
-    
-((
+
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+(set +e;(set -e
+
     set +e
     while sleep 1
     do
         python3 ./tcp_over_http_server.py --http-host 127.0.0.1 --http-port 2859 --tcp-host 127.0.0.1 --tcp-port 22
     done
-)&)
 
-((
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+(set +e;(set -e
+
     (
     
         for q in $(seq 1 3)
@@ -109,9 +118,11 @@ python3 -m pip install aiohttp
         done
             
     ) > "${this_file_dir}/urls.txt"
-)&)
-    
-((
+
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+(set +e;(set -e
+
     set +e
     while sleep 3500
     do
@@ -120,8 +131,18 @@ python3 -m pip install aiohttp
         git commit -mm || continue
         git push --force --set-upstream origin main
     done
-)&)
 
-sleep $(
-    ( echo -n 'scale = 2; 3600 * 6 - 8 - ' ; cut -d' ' -f1 /proc/uptime ) | bc
-)
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+(set +e;(set -e
+
+    sleep $(
+        ( echo -n 'scale = 2; 3600 * 6 - 8 - ' ; cut -d' ' -f1 /proc/uptime ) | bc
+    )
+    touch ok
+
+);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
+printf 'HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n' | nc -N -l 1
+
+test -f ok
