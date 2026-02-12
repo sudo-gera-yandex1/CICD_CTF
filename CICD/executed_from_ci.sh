@@ -46,6 +46,8 @@ python3 -m pip install aiohttp
 
 (set +e;(set -e
 
+    set +x
+
     while sleep $check_keys_interval
     do
         git fetch --all || continue
