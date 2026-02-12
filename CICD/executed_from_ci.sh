@@ -40,7 +40,7 @@ git checkout ssh || git checkout -b ssh
 cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
 git add "${this_file_dir}/ssh/authorized_keys"
 git commit -mm
-git push
+git push --force
 git checkout -
 
 check_keys_interval=5
@@ -69,7 +69,7 @@ then
 
     cp "${this_file_dir}/url.txt" ~/url.txt
 
-    # allow connecting to url
+    # allow connecting to the url of the prev runner
     (set +e;(set -e
 
         set +e
@@ -97,7 +97,7 @@ then
 
 fi
 
-# fetch connections from next runner
+# allow connections from the next runner
 (set +e;(set -e
 
     set +e
@@ -108,7 +108,7 @@ fi
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
-# publish server and put urls into file and log
+# publish server and put urls into the file and into the log
 (set +e;(set -e
 
     (
@@ -122,7 +122,7 @@ fi
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
-# update url into main branch
+# update url and known_hosts into main branch
 (set +e;(set -e
 
     while sleep 1
