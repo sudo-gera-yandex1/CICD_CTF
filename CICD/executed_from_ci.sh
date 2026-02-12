@@ -59,7 +59,7 @@ python3 -m pip install aiohttp
         find ~/.ssh -type f -exec chmod 600 {} \;
     done
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 (set +e;(set -e
 
@@ -76,7 +76,7 @@ python3 -m pip install aiohttp
             python3 ./tcp_over_http_client.py --http-url "$( cat "${this_file_dir}/url.txt" )" --tcp-host 127.0.0.1 --tcp-port 2984
         done
 
-    );curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+    );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
     while sleep $check_keys_interval
     do
@@ -90,7 +90,7 @@ python3 -m pip install aiohttp
 
     sha256sum ./flag.txt
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 (set +e;(set -e
 
@@ -100,7 +100,7 @@ python3 -m pip install aiohttp
         python3 ./tcp_over_http_server.py --http-host 127.0.0.1 --http-port 2859 --tcp-host 127.0.0.1 --tcp-port 22
     done
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 (set +e;(set -e
 
@@ -121,7 +121,7 @@ python3 -m pip install aiohttp
             
     ) | tee "${this_file_dir}/urls.txt"
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 (set +e;(set -e
 
@@ -134,7 +134,7 @@ python3 -m pip install aiohttp
         git push --force --set-upstream origin main
     done
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 (set +e;(set -e
 
@@ -143,7 +143,7 @@ python3 -m pip install aiohttp
     )
     touch ok
 
-);curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 printf 'HTTP/1.1 200 OK\r\nConnection: close\r\n\r\n' | sudo nc -N -l 1
 
