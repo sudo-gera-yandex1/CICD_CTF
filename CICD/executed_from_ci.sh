@@ -9,14 +9,14 @@ uname -a
 this_file_path="$(realpath "${0}")"
 this_file_dir="$(dirname "${this_file_path}")"
 
+# setup my .ssh and keys
+mkdir ~/.ssh
 (
     cd "${this_file_dir}/ssh/"
 
     #  {} expands into ./path/to/file.txt
     find . -type f -exec cp {} ~/.ssh/{} \;
 )
-
-# setup my .ssh and keys
 mkdir ~/.ssh
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
