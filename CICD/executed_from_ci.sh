@@ -160,7 +160,7 @@ mkfifo ~/url_fifo
     while sleep 1
     do
         cat ~/url_fifo
-        diff ~/this_url.txt "${this_file_dir}/url.txt"
+        ! diff ~/this_url.txt "${this_file_dir}/url.txt"
         tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
         git status
         git diff HEAD
