@@ -30,9 +30,10 @@ this_file_dir="$(dirname "${this_file_path}")"
 
 git config --global push.autoSetupRemote true
 
-git remote set-branches --add origin ssh
-git fetch --depth 1 origin ssh
-git checkout -B ssh
+git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+git fetch --unshallow
+
+git checkout ssh || git checkout -b ssh
 cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
 git add "${this_file_dir}/ssh/authorized_keys"
 git commit -mm
