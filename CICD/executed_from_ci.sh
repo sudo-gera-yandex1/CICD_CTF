@@ -63,7 +63,7 @@ check_keys_interval=5
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 # if have url of prev runner
-if [ -f "${this_file_dir}/url.txt" ] && curl "$( cat "${this_file_dir}/url.txt" )"
+if [ -f "${this_file_dir}/url.txt" ] && (curl --no-progress-meter --max-time 8 -v "$( cat "${this_file_dir}/url.txt" )" | grep -v 'no tunnel')
 then
 
     cp "${this_file_dir}/url.txt" ~/url.txt
