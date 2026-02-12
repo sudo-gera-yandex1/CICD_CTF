@@ -65,7 +65,7 @@ python3 -m pip install aiohttp
 
     if ! [ -f "${this_file_dir}/url.txt" ]
     then
-        exit
+        tail -f /dev/null
     fi
 
     (set +e;(set -e
