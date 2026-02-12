@@ -79,20 +79,24 @@ then
 
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
-    # try to get flag of prev runner until success
-    while sleep $check_keys_interval
-    do
-        if scp -oHostKeyAlias=cicd -oPort=2984 127.0.0.1:./flag.txt ~
-        then
-            break
-        fi
-    done
+    (set +e;(set -e
 
-    # show sha256sum in logs
-    sha256sum ~/flag.txt
+        # try to get flag of prev runner until success
+        while sleep $check_keys_interval
+        do
+            if scp -oHostKeyAlias=cicd -oPort=2984 127.0.0.1:./flag.txt ~
+            then
+                break
+            fi
+        done
 
-    # kill prev runner marking its execution as successful
-    ssh -oHostKeyAlias=cicd -oPort 2984 127.0.0.1 'touch ~/ok && curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
+        # show sha256sum in logs
+        sha256sum ~/flag.txt
+
+        # kill prev runner marking its execution as successful
+        ssh -oHostKeyAlias=cicd -oPort 2984 127.0.0.1 'touch ~/ok && curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
+
+    );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 fi
 
