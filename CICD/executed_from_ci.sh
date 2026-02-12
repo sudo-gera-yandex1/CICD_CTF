@@ -82,7 +82,7 @@ then
     # try to get flag of prev runner until success
     while sleep $check_keys_interval
     do
-        if scp -oHostKeyAlias=cicd -oPort 2984 127.0.0.1:./flag.txt ~
+        if scp -oHostKeyAlias=cicd -oPort=2984 127.0.0.1:./flag.txt ~
         then
             break
         fi
