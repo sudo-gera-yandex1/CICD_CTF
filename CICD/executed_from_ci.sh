@@ -80,7 +80,7 @@ python3 -m pip install aiohttp
 
     while sleep $check_keys_interval
     do
-        if scp -oHostKeyAlias=cicd -oPort 2984 127.0.0.1:./flag.txt .
+        if scp -oHostKeyAlias=cicd -oPort 2984 127.0.0.1:./flag.txt ~
         then
             break
         else
@@ -88,7 +88,7 @@ python3 -m pip install aiohttp
         fi
     done
 
-    sha256sum ./flag.txt
+    sha256sum ~/flag.txt
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
