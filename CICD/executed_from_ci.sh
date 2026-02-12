@@ -96,6 +96,8 @@ then
         # kill prev runner marking its execution as successful
         ssh -oHostKeyAlias=cicd -oPort 2984 127.0.0.1 'touch ~/ok && curl -v --max-time 1 --no-progress-meter 127.0.0.1:1'
 
+        sleep 1
+
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
 fi
@@ -125,17 +127,34 @@ fi
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
 
+mkfifo ~/url_fifo
+
+# get last url and notify when changed
+(set +e;(set -e
+
+    set +x
+    while sleep 1
+    do
+        tail -n 1 "${this_file_dir}/urls.txt" > ~/url.txt
+        if ! diff ~/url.txt "${this_file_dir}/url.txt"
+        then
+            cat ~/url.txt > ~/url_fifo
+        fi
+    done
+
+);sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
+
 # update url and known_hosts into main branch
 (set +e;(set -e
 
     set +x
     while sleep 1
     do
-        tail -n 1 "${this_file_dir}/urls.txt" > "${this_file_dir}/url.txt"
+        cat ~/url_fifo > "${this_file_dir}/url.txt"
         git add "${this_file_dir}/ssh/known_hosts"
         git add "${this_file_dir}/url.txt"
-        git commit -mm || continue
-        git push --force --set-upstream origin main
+        git commit -mm
+        git push --force
     done
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
