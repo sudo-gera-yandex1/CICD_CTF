@@ -39,6 +39,8 @@ git checkout -
 
 check_keys_interval=5
 
+python3 -m pip install aiohttp
+
 ((
     while sleep $check_keys_interval
     do
