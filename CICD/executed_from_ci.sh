@@ -9,7 +9,7 @@ uname -a
 this_file_path="$(realpath "${0}")"
 this_file_dir="$(dirname "${this_file_path}")"
 
-# setup my .ssh and keys
+# setup my .ssh and keys, adding known_host from ./ssh/cicd_known_hosts
 mkdir -p ~/.ssh
 (
     cd "${this_file_dir}/ssh/"
@@ -37,12 +37,20 @@ git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 git fetch --unshallow
 
 # authorize at the prev runner
+public_runner_hash="$(git rev-parse HEAD)"
 git checkout ssh || git checkout -b ssh
+git reset --hard "$public_runner_hash"
 cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
 git add "${this_file_dir}/ssh/authorized_keys"
 git commit -mm
 git push --force
 git checkout -
+
+# go to runner branch
+public_main_hash="$(git rev-parse HEAD)"
+git checkout runner || git checkout -b runner
+git reset --hard "$public_main_hash"
+
 
 check_keys_interval=5
 
@@ -78,7 +86,7 @@ then
         set +e
         while sleep 1
         do
-            python3 ./tcp_over_http_client.py --http-url "$( cat ~/prev_url.txt )" --tcp-host 127.0.0.1 --tcp-port 2984
+            python3 "${this_file_dir}/tcp_over_http_client.py" --http-url "$( cat ~/prev_url.txt )" --tcp-host 127.0.0.1 --tcp-port 2984
         done
 
     );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
@@ -114,7 +122,7 @@ fi
     set +e
     while sleep 1
     do
-        python3 ./tcp_over_http_server.py --http-host 127.0.0.1 --http-port 2859 --tcp-host 127.0.0.1 --tcp-port 22
+        python3 "${this_file_dir}/tcp_over_http_server.py" --http-host 127.0.0.1 --http-port 2859 --tcp-host 127.0.0.1 --tcp-port 22
     done
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
