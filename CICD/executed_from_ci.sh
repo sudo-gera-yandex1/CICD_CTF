@@ -21,7 +21,7 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 find ~/.ssh -type f -exec chmod 600 {} \;
 
-# auto config
+# auto push
 git config --global push.autoSetupRemote true
 
 # git config user
