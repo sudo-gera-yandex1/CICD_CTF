@@ -19,10 +19,6 @@ mkdir -p ~/.ssh
 )
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N '' -q
 cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
-if [ -f "${this_file_dir}/ssh/cicd_known_hosts" ]
-then
-    cat "${this_file_dir}/ssh/cicd_known_hosts" >> ~/.ssh/known_hosts
-fi
 find ~/.ssh -type f -exec chmod 600 {} \;
 
 # auto config
@@ -52,6 +48,8 @@ git checkout runner || git checkout -b runner
 if [ -f "${this_file_dir}/url.txt" ] && (curl --no-progress-meter --max-time 8 -v "$( cat "${this_file_dir}/url.txt" )" | grep -v 'no tunnel')
 then
     cp "${this_file_dir}/url.txt" ~/prev_url.txt
+    cat "${this_file_dir}/ssh/cicd_known_hosts" >> ~/.ssh/known_hosts
+    find ~/.ssh -type f -exec chmod 600 {} \;
 fi
 git reset --hard "$public_main_hash"
 
