@@ -39,7 +39,7 @@ git reset --hard "$public_runner_hash"
 cat ~/.ssh/id_ed25519.pub >> "${this_file_dir}/ssh/authorized_keys"
 git add "${this_file_dir}/ssh/authorized_keys"
 git commit -mm
-git push --force
+while ! git push --force;do :;done
 git checkout -
 
 # go to runner branch
@@ -177,7 +177,7 @@ mkfifo ~/url_fifo
         git add "${this_file_dir}/ssh/cicd_known_hosts"
         git add "${this_file_dir}/url.txt"
         git commit -mm
-        git push --force
+        while ! git push --force;do :;done
     done
 
 );sleep 4 ; curl -v --max-time 1 --no-progress-meter 127.0.0.1:1)&
