@@ -2,8 +2,8 @@ name: CICD
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '21 * * * *'   # Runs every hour at minute 21
+#  schedule:
+#    - cron: '21 * * * *'   # Runs every hour at minute 21
 
 permissions:
   contents: write  # required to push commits
